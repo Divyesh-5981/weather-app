@@ -17,7 +17,7 @@ body {
 }
 
 .container {
-  /* max-width: 1185px; */
+  max-width: 1185px;
   margin: 0 auto;
   padding-right: 0px;
   padding-left: 0px;
@@ -59,7 +59,7 @@ Input Div
 }
 .input-div .weather-heading h1 {
   font-weight: 500;
-  font-size: 42px;
+  font-size: 36px;
 }
 .input-div .weather-input {
   display: flex;
@@ -130,7 +130,6 @@ section .current-weather-div {
   padding: 2rem;
   border-radius: 15px;
   border: 3px solid #f9bf0d;
-  max-width: 40%;
 }
 
 .current-weather-div .name-info,
@@ -138,8 +137,9 @@ section .current-weather-div {
   text-align: center;
 }
 
-.current-weather-div .name-info h2 {
-  font-size: 26px;
+.current-weather-div .name-info h2,
+.time-info h2 {
+  font-size: 20px;
 }
 
 .current-weather-degreeinfo {
@@ -147,13 +147,17 @@ section .current-weather-div {
 }
 
 .current-weather-degreeinfo h1 {
-  font-size: 70px;
+  font-size: 54px;
   font-weight: 500;
 }
 
 .current-weather-info {
   display: flex;
   justify-content: space-around;
+}
+
+.current-weather-imginfo {
+  margin-right: 10rem;
 }
 
 .current-weather-imginfo h2 {
@@ -169,7 +173,6 @@ Right-Box
 section .more-info-div {
   flex: 1;
   background: linear-gradient(to right, rgb(64, 64, 64), rgb(46, 46, 46));
-  max-width: 40%;
   border-radius: 15px;
   border: 3px solid #f9bf0d;
   padding: 2rem;
@@ -182,7 +185,7 @@ section .more-info-div {
 }
 
 .more-info-div .more-info-heading h2 {
-  font-size: 26px;
+  font-size: 20px;
 }
 
 .more-info-div .info-div .single-info {
@@ -193,6 +196,6 @@ section .more-info-div {
 }
 
 .more-info-p {
-  font-size: 22px;
+  font-size: var(--medium-font);
   padding-left: 1rem;
 }
