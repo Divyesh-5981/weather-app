@@ -1,0 +1,198 @@
+/* 
+==========
+Global CSS
+==========
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--primary-clr);
+  background: linear-gradient(to right, rgba(53, 127, 217), rgb(3, 205, 253));
+}
+
+.container {
+  /* max-width: 1185px; */
+  margin: 0 auto;
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+/* 
+==========
+CSS Variables
+==========
+*/
+
+:root {
+  --primary-clr: #fff;
+  --small-font: 14px;
+  --medium-font: 18px;
+  --larger-font: 38px;
+  --letter-spacing: 0.01em;
+  --font-weight: 600;
+}
+
+/* 
+==========
+Input Div
+==========
+*/
+
+.input-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 2rem;
+}
+.weather-input {
+  margin-top: 5rem;
+}
+.input-div .weather-heading {
+  font-size: 58px;
+}
+.input-div .weather-heading h1 {
+  font-weight: 500;
+  font-size: 42px;
+}
+.input-div .weather-input {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.weather-input .city {
+  font-size: var(--medium-font);
+}
+.weather-input input {
+  height: 40px;
+  padding-left: 1rem;
+  font-size: 16px;
+  padding-right: 14rem;
+  border-radius: 5px;
+  outline: none;
+  border: none;
+}
+.weather-input .input-city-desc {
+  font-size: var(--small-font);
+}
+.weather-input button {
+  font-size: var(--medium-font);
+  margin-top: 20px;
+  padding: 7px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 5px;
+  color: var(--primary-clr);
+  background: #000000;
+  cursor: pointer;
+}
+.weather-input button:hover {
+  box-shadow: 0px 0px 2px 4px rgb(51, 116, 147);
+}
+.wavy {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #e8bf27;
+}
+
+/* 
+==========
+Weather Info Section
+==========
+*/
+
+section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 10rem;
+  gap: 2rem;
+}
+
+/* 
+==========
+Left-Box
+==========
+*/
+
+section .current-weather-div {
+  flex: 1;
+  background: linear-gradient(to right, rgb(64, 64, 64), rgb(46, 46, 46));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem;
+  border-radius: 15px;
+  border: 3px solid #f9bf0d;
+  max-width: 40%;
+}
+
+.current-weather-div .name-info,
+.current-weather-div .time-info {
+  text-align: center;
+}
+
+.current-weather-div .name-info h2 {
+  font-size: 26px;
+}
+
+.current-weather-degreeinfo {
+  align-self: center;
+}
+
+.current-weather-degreeinfo h1 {
+  font-size: 70px;
+  font-weight: 500;
+}
+
+.current-weather-info {
+  display: flex;
+  justify-content: space-around;
+}
+
+.current-weather-imginfo h2 {
+  font-size: 26px;
+  font-weight: 400;
+}
+
+/* 
+==========
+Right-Box
+==========
+*/
+section .more-info-div {
+  flex: 1;
+  background: linear-gradient(to right, rgb(64, 64, 64), rgb(46, 46, 46));
+  max-width: 40%;
+  border-radius: 15px;
+  border: 3px solid #f9bf0d;
+  padding: 2rem;
+}
+
+.more-info-div .more-info-heading {
+  margin-top: 1rem;
+  margin-bottom: 4rem;
+  margin-left: 1rem;
+}
+
+.more-info-div .more-info-heading h2 {
+  font-size: 26px;
+}
+
+.more-info-div .info-div .single-info {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #373737;
+  padding: 1rem 0;
+}
+
+.more-info-p {
+  font-size: 22px;
+  padding-left: 1rem;
+}
