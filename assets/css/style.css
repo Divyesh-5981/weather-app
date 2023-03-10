@@ -23,6 +23,9 @@ body {
   padding-left: 0px;
 }
 
+i {
+  font-size: 20px;
+}
 /* 
 ==========
 CSS Variables
@@ -92,7 +95,7 @@ Input Div
   background: #000000;
   cursor: pointer;
 }
-.weather-input button:hover {
+.weather-input .box-btn {
   box-shadow: 0px 0px 2px 4px rgb(51, 116, 147);
 }
 .wavy {
@@ -111,8 +114,12 @@ section {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 10rem;
+  margin-top: 5rem;
   gap: 2rem;
+}
+
+.section-div {
+  display: none;
 }
 
 /* 
@@ -127,7 +134,7 @@ section .current-weather-div {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 15px;
   border: 3px solid #f9bf0d;
 }
@@ -135,6 +142,16 @@ section .current-weather-div {
 .current-weather-div .name-info,
 .current-weather-div .time-info {
   text-align: center;
+}
+
+.time-info {
+  border: 1px solid #373737;
+}
+
+.current-weather-imginfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .current-weather-div .name-info h2,
@@ -147,7 +164,7 @@ section .current-weather-div {
 }
 
 .current-weather-degreeinfo h1 {
-  font-size: 54px;
+  font-size: 44px;
   font-weight: 500;
 }
 
@@ -175,12 +192,12 @@ section .more-info-div {
   background: linear-gradient(to right, rgb(64, 64, 64), rgb(46, 46, 46));
   border-radius: 15px;
   border: 3px solid #f9bf0d;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .more-info-div .more-info-heading {
   margin-top: 1rem;
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
   margin-left: 1rem;
 }
 
@@ -192,10 +209,10 @@ section .more-info-div {
   display: flex;
   justify-content: space-between;
   border: 1px solid #373737;
-  padding: 1rem 0;
+  padding: 10px 0;
 }
 
 .more-info-p {
-  font-size: var(--medium-font);
+  font-size: var(--small-font);
   padding-left: 1rem;
 }
