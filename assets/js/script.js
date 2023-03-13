@@ -44,53 +44,55 @@ const getWeatherInfo = function (city) {
             console.log('weatherBasedOnDescription', response.weather[0].description)
 
             // get weather icon based on the description
-            getWeatherIconUsingDes(response.weather[0].description);
+            let updateValue = getWeatherIconUsingDes(response.weather[0].description);
 
-            // switch case
-            switch (weatherDetail) {
-                // Clear
-                case 'Clear': weatherImg.src = `./assets/animated/clear_sky.svg`;
-                    break;
+            if (updateValue === 0) {
+                // switch case
+                switch (weatherDetail) {
+                    // Clear
+                    case 'Clear': weatherImg.src = `./assets/animated/clear_sky.svg`;
+                        break;
 
-                // Clouds
-                case 'Clouds': weatherImg.src = `./assets/animated/few_clouds.svg`;
-                    break;
+                    // Clouds
+                    case 'Clouds': weatherImg.src = `./assets/animated/few_clouds.svg`;
+                        break;
 
-                // Rain
-                case 'Rain': weatherImg.src = `./assets/animated/rain.svg`;
-                    break;
+                    // Rain
+                    case 'Rain': weatherImg.src = `./assets/animated/rain.svg`;
+                        break;
 
-                // Thunderstorm
-                case 'Thunderstorm': weatherImg.src = `./assets/animated/thunderstorm.svg`;
-                    break;
+                    // Thunderstorm
+                    case 'Thunderstorm': weatherImg.src = `./assets/animated/thunderstorm.svg`;
+                        break;
 
-                // Snow
-                case 'Snow': weatherImg.src = `./assets/animated/snow.svg`;
-                    break;
+                    // Snow
+                    case 'Snow': weatherImg.src = `./assets/animated/snow.svg`;
+                        break;
 
-                // Drizzle
-                case 'Drizzle': weatherImg.src = `./assets/animated/shower_rain.svg`;
-                    break;
+                    // Drizzle
+                    case 'Drizzle': weatherImg.src = `./assets/animated/shower_rain.svg`;
+                        break;
 
-                // Atmosphere
-                case 'Mist': weatherImg.src = `./assets/animated/mist.svg`;
-                    break;
-                case 'Smoke': weatherImg.src = `./assets/animated/mist.svg`;
-                    break;
-                case 'Haze': weatherImg.src = `./assets/animated/mist.svg`;
-                    break;
-                case 'Dust': weatherImg.src = `./assets/animated/mist.svg`;
-                    break;
-                case 'Fog': weatherImg.src = `./assets/animated/mist.svg`;
-                    break;
-                case 'Sand': weatherImg.src = `./assets/animated/mist.svg`;
-                    break;
-                case 'Ash': weatherImg.src = `./assets/animated/mist.svg`;
-                    break;
-                case 'Squall': weatherImg.src = `./assets/animated/mist.svg`;
-                    break;
-                case 'Tornado': weatherImg.src = `./assets/animated/mist.svg`;
-                    break;
+                    // Atmosphere
+                    case 'Mist': weatherImg.src = `./assets/animated/mist.svg`;
+                        break;
+                    case 'Smoke': weatherImg.src = `./assets/animated/mist.svg`;
+                        break;
+                    case 'Haze': weatherImg.src = `./assets/animated/mist.svg`;
+                        break;
+                    case 'Dust': weatherImg.src = `./assets/animated/mist.svg`;
+                        break;
+                    case 'Fog': weatherImg.src = `./assets/animated/mist.svg`;
+                        break;
+                    case 'Sand': weatherImg.src = `./assets/animated/mist.svg`;
+                        break;
+                    case 'Ash': weatherImg.src = `./assets/animated/mist.svg`;
+                        break;
+                    case 'Squall': weatherImg.src = `./assets/animated/mist.svg`;
+                        break;
+                    case 'Tornado': weatherImg.src = `./assets/animated/mist.svg`;
+                        break;
+                }
             }
 
 
@@ -156,18 +158,24 @@ getInfoBtn.addEventListener('focusout', function () {
 
 // get weather icon based on the description
 function getWeatherIconUsingDes(weatherDes) {
-    if (weatherDes === 'light rain' || 'moderate rain' || 'heavy intensity rain' || 'very heavy rain' || 'extreme rain') {
+    console.log(weatherDes)
+    if (weatherDes === 'light rain' || weatherDes === 'moderate rain' || weatherDes === 'heavy intensity rain' || weatherDes === 'very heavy rain' || weatherDes === 'extreme rain') {
         weatherImg.src = './assets/animated/rain.svg';
+        return 1;
     } else if (weatherDes === 'freezing rain') {
-        weatherImg.src = '.assets/animated/snow.svg'
-    } else if (weatherDes === 'light intensity shower rain' || 'shower rain' || 'heavy intensity shower rain' || 'ragged shower rain') {
-        weatherImg.src = '.assets/animated/shower_rain.svg'
+        weatherImg.src = './assets/animated/snow.svg';
+        return 1;
+    } else if (weatherDes === 'light intensity shower rain' || weatherDes === 'shower rain' || weatherDes === 'heavy intensity shower rain' || weatherDes === 'ragged shower rain') {
+        weatherImg.src = './assets/animated/shower_rain.svg';
+        return 1;
     } else if (weatherDes === 'few clouds') {
-        weatherImg.src = '.assets/animated/few_clouds.svg'
-    } else if (weatherDes === 'scattered clouds' || 'broken clouds' || 'overcast clouds') {
-        weatherImg.src = '.assets/animated/broken_clouds.svg'
+        weatherImg.src = './assets/animated/few_clouds.svg';
+        return 1;
+    } else if (weatherDes === 'scattered clouds' || weatherDes === 'broken clouds' || weatherDes === 'overcast clouds') {
+        weatherImg.src = './assets/animated/broken_clouds.svg';
+        return 1;
     } else {
-        return;
+        return 0;
     }
 }
 
