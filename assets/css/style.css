@@ -26,6 +26,10 @@ body {
 i {
   font-size: 20px;
 }
+
+img {
+  width: 130px;
+}
 /* 
 ==========
 CSS Variables
@@ -215,4 +219,14 @@ section .more-info-div {
 .more-info-p {
   font-size: var(--small-font);
   padding-left: 1rem;
+}
+
+.error-msg {
+  color: red;
+  text-align: center;
+  border: 1px solid red;
+  border-radius: 15px;
+  background: whitesmoke;
+  padding: 5px;
+  margin-top: 20px;
 }

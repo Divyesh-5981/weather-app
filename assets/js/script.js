@@ -13,6 +13,7 @@ const city = document.getElementById('city');
 const rightContainer = document.querySelector('.more-info-div');
 const sectionDiv = document.querySelector('.section-div');
 const weatherImg = document.querySelector('.current-weather-img');
+const weatherInputContainer = document.querySelector('.weather-input')
 
 const API_KEY = '96d6d065213dba04092397c03343aea2';
 
@@ -27,12 +28,74 @@ const getWeatherInfo = function (city) {
             sectionDiv.style.display = "block";
 
             // weather info of left container
+
+            // city and country name
+            country.innerHTML = `${response.name}${response.sys.country ? "," + response.sys.country : ''}`;
+
+            // overcast
             overCast.innerHTML = `<h2 class="overcast">${response.weather[0].main}</h2>`;
 
             // show clock time
             realTimeClock();
 
-            weatherImg.src = `https://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png`;
+            // Get weather detail and set img dynamically
+            const weatherDetail = response.weather[0].main;
+
+            console.log('weatherBasedOnDescription', response.weather[0].description)
+
+            // get weather icon based on the description
+            getWeatherIconUsingDes(response.weather[0].description);
+
+            // switch case
+            switch (weatherDetail) {
+                // Clear
+                case 'Clear': weatherImg.src = `./assets/animated/clear_sky.svg`;
+                    break;
+
+                // Clouds
+                case 'Clouds': weatherImg.src = `./assets/animated/few_clouds.svg`;
+                    break;
+
+                // Rain
+                case 'Rain': weatherImg.src = `./assets/animated/rain.svg`;
+                    break;
+
+                // Thunderstorm
+                case 'Thunderstorm': weatherImg.src = `./assets/animated/thunderstorm.svg`;
+                    break;
+
+                // Snow
+                case 'Snow': weatherImg.src = `./assets/animated/snow.svg`;
+                    break;
+
+                // Drizzle
+                case 'Drizzle': weatherImg.src = `./assets/animated/shower_rain.svg`;
+                    break;
+
+                // Atmosphere
+                case 'Mist': weatherImg.src = `./assets/animated/mist.svg`;
+                    break;
+                case 'Smoke': weatherImg.src = `./assets/animated/mist.svg`;
+                    break;
+                case 'Haze': weatherImg.src = `./assets/animated/mist.svg`;
+                    break;
+                case 'Dust': weatherImg.src = `./assets/animated/mist.svg`;
+                    break;
+                case 'Fog': weatherImg.src = `./assets/animated/mist.svg`;
+                    break;
+                case 'Sand': weatherImg.src = `./assets/animated/mist.svg`;
+                    break;
+                case 'Ash': weatherImg.src = `./assets/animated/mist.svg`;
+                    break;
+                case 'Squall': weatherImg.src = `./assets/animated/mist.svg`;
+                    break;
+                case 'Tornado': weatherImg.src = `./assets/animated/mist.svg`;
+                    break;
+            }
+
+
+            // convert temperature from kelvin to celsius
+            degreeInfo.innerHTML = `${(response.main.temp - 273.15).toFixed(2)}°C`;
 
             // weather info of right container
             rightContainer.innerHTML =
@@ -73,7 +136,9 @@ const getWeatherInfo = function (city) {
                         <i class="far fa-tint"></i>
                     </div>
                 </div>`;
-        }).catch((err) => alert('location is not found'))
+        }).catch((err) => {
+            displayErrorMsg();
+        })
 }
 
 // When get info button is clicked add box-btn class and also display weather data
@@ -88,6 +153,23 @@ getInfoBtn.addEventListener('click', function () {
 getInfoBtn.addEventListener('focusout', function () {
     getInfoBtn.classList.remove('box-btn');
 });
+
+// get weather icon based on the description
+function getWeatherIconUsingDes(weatherDes) {
+    if (weatherDes === 'light rain' || 'moderate rain' || 'heavy intensity rain' || 'very heavy rain' || 'extreme rain') {
+        weatherImg.src = './assets/animated/rain.svg';
+    } else if (weatherDes === 'freezing rain') {
+        weatherImg.src = '.assets/animated/snow.svg'
+    } else if (weatherDes === 'light intensity shower rain' || 'shower rain' || 'heavy intensity shower rain' || 'ragged shower rain') {
+        weatherImg.src = '.assets/animated/shower_rain.svg'
+    } else if (weatherDes === 'few clouds') {
+        weatherImg.src = '.assets/animated/few_clouds.svg'
+    } else if (weatherDes === 'scattered clouds' || 'broken clouds' || 'overcast clouds') {
+        weatherImg.src = '.assets/animated/broken_clouds.svg'
+    } else {
+        return;
+    }
+}
 
 // showing clock time
 
@@ -111,3 +193,15 @@ function realTimeClock() {
     var t = setTimeout(realTimeClock, 500);
 }
 
+// displayErrorMsg when something is wrong
+
+function displayErrorMsg() {
+    sectionDiv.style.display = "none";
+    const errorMsg = document.createElement('h2');
+    errorMsg.innerHTML = "Location is not found! Try Again ☹";
+    errorMsg.classList.add('error-msg');
+    weatherInputContainer.append(errorMsg);
+    setTimeout(() => {
+        errorMsg.style.display = "none";
+    }, 3000);
+}
