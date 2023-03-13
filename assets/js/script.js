@@ -22,7 +22,6 @@ const API_KEY = '96d6d065213dba04092397c03343aea2';
 const getWeatherInfo = function (city) {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
         .then((data) => data.json()).then((response) => {
-            console.log(response)
 
             // display containers when user clicks the button
             sectionDiv.style.display = "block";
@@ -40,8 +39,6 @@ const getWeatherInfo = function (city) {
 
             // Get weather detail and set img dynamically
             const weatherDetail = response.weather[0].main;
-
-            console.log('weatherBasedOnDescription', response.weather[0].description)
 
             // get weather icon based on the description
             let updateValue = getWeatherIconUsingDes(response.weather[0].description);
@@ -158,7 +155,6 @@ getInfoBtn.addEventListener('focusout', function () {
 
 // get weather icon based on the description
 function getWeatherIconUsingDes(weatherDes) {
-    console.log(weatherDes)
     if (weatherDes === 'light rain' || weatherDes === 'moderate rain' || weatherDes === 'heavy intensity rain' || weatherDes === 'very heavy rain' || weatherDes === 'extreme rain') {
         weatherImg.src = './assets/animated/rain.svg';
         return 1;
