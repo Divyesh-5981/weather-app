@@ -22,8 +22,6 @@ const getWeatherInfo = function (city) {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
         .then((data) => data.json()).then((response) => {
 
-            console.log(response);
-
             // display containers when user clicks the button
             sectionDiv.style.display = "block";
 
