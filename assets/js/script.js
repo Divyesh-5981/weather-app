@@ -1,5 +1,4 @@
 // https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-// URL is https://openweathermap.org/img/wn/10d@2x.png
 // API Key = 96d6d065213dba04092397c03343aea2
 
 // select elements 
@@ -23,19 +22,18 @@ const getWeatherInfo = function (city) {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
         .then((data) => data.json()).then((response) => {
 
+            console.log(response);
+
             // display containers when user clicks the button
             sectionDiv.style.display = "block";
 
-            // weather info of left container
+            //1. weather info of left container
 
             // city and country name
             country.innerHTML = `${response.name}${response.sys.country ? "," + response.sys.country : ''}`;
 
             // overcast
             overCast.innerHTML = `<h2 class="overcast">${response.weather[0].main}</h2>`;
-
-            // show clock time
-            realTimeClock();
 
             // Get weather detail and set img dynamically
             const weatherDetail = response.weather[0].main;
@@ -92,24 +90,18 @@ const getWeatherInfo = function (city) {
                 }
             }
 
-
             // convert temperature from kelvin to celsius
             degreeInfo.innerHTML = `${(response.main.temp - 273.15).toFixed(2)}°C`;
 
-            // weather info of right container
+            // show clock time
+            realTimeClock();
+
+            //2. weather info of right container
             rightContainer.innerHTML =
                 `<div class="more-info-heading">
                         <h2>More Info</h2>
                     </div>
                 <div class="info-div">
-                    <div class="single-info">
-                        <p class="more-info-p">Last Updated: 2023-03-08 08:45</p>
-                        <i class="bi bi-clock-history"></i>
-                    </div>
-                    <div class="single-info">
-                        <p class="more-info-p">UV Index: 6</p>
-                        <i class="bi bi-speedometer"></i>
-                    </div>
                     <div class="single-info">
                         <p class="more-info-p">Pressure: ${response.main.pressure}</p>
                         <i class="bi bi-arrows-collapse"></i>
@@ -121,10 +113,6 @@ const getWeatherInfo = function (city) {
                     <div class="single-info">
                         <p class="more-info-p">Wind Speed: ${response.wind.speed}</p>
                         <i class="far fa-wind"></i>
-                    </div>
-                    <div class="single-info">
-                        <p class="more-info-p">Wind Direction: NNE</p>
-                        <i class="far fa-compass"></i>
                     </div>
                     <div class="single-info">
                         <p class="more-info-p">Wind Degree: ${response.wind.deg}</p>
@@ -141,14 +129,13 @@ const getWeatherInfo = function (city) {
 }
 
 // When get info button is clicked add box-btn class and also display weather data
-
 getInfoBtn.addEventListener('click', function () {
     getInfoBtn.classList.add('box-btn');
-    getWeatherInfo(city.value);
+    const cityName = city.value.trim();
+    getWeatherInfo(cityName);
 });
 
 // when focus out on button remove box-btn class
-
 getInfoBtn.addEventListener('focusout', function () {
     getInfoBtn.classList.remove('box-btn');
 });
