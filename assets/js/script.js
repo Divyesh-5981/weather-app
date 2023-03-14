@@ -133,13 +133,6 @@ getInfoBtn.addEventListener('click', function () {
     getWeatherInfo(cityName);
 });
 
-
-city.addEventListener('change', function () {
-    getInfoBtn.classList.add('box-btn');
-    const cityName = city.value.trim();
-    getWeatherInfo(cityName);
-})
-
 // when focus out on button remove box-btn class
 getInfoBtn.addEventListener('focusout', function () {
     getInfoBtn.classList.remove('box-btn');
