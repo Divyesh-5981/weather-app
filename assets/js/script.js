@@ -80,7 +80,6 @@ const getWeatherInfo = function (city) {
                     </div>
                 </div>`;
         }).catch((err) => {
-            alert(err)
             displayErrorMsg("Location is not found! Try Again ☹");
         })
 }
