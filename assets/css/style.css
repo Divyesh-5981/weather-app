@@ -231,6 +231,9 @@ section .more-info-div {
   margin-top: 20px;
 }
 
+#form {
+  display: contents;
+}
 /* 
 ==========
 Media Query
