@@ -71,10 +71,11 @@ Input Div
 .input-div .weather-input {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  /* gap: 15px; */
 }
 .weather-input .city {
   font-size: var(--medium-font);
+  margin-bottom: 15px;
 }
 .weather-input input {
   height: 40px;
@@ -87,6 +88,7 @@ Input Div
 }
 .weather-input .input-city-desc {
   font-size: var(--small-font);
+  margin-top: 4px;
 }
 .weather-input button {
   font-size: var(--medium-font);
@@ -234,6 +236,20 @@ section .more-info-div {
 #form {
   display: contents;
 }
+
+/* 
+==========
+disable button style
+==========
+*/
+
+/* .disable {
+  background: rgb(159, 165, 170) !important;
+}*/
+/* .not-allowed {
+  cursor: not-allowed !important;
+} */
+
 /* 
 ==========
 Media Query
@@ -272,12 +288,12 @@ Media Query
   .current-weather-info {
     margin: 0;
   }
+  .weather-input input {
+    padding-right: 0;
+  }
 }
 @media screen and (max-width: 400px) {
   .container {
     width: 370px;
-  }
-  .weather-input input {
-    padding-right: 0;
   }
 }

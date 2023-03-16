@@ -3,17 +3,12 @@
 
 // select elements 
 
-const countryName = document.querySelector('.country-name');
-const overCast = document.querySelector('.overcast');
-const degreeInfo = document.querySelector('.degree');
-const time = document.querySelector('.time');
 const getInfoBtn = document.querySelector('.getInfo');
 const city = document.getElementById('city');
-const rightContainer = document.querySelector('.more-info-div');
 const sectionDiv = document.querySelector('.section-div');
-const weatherImg = document.querySelector('.current-weather-img');
 const weatherInputContainer = document.querySelector('.weather-input');
 const form = document.querySelector('#form');
+const sectionContainer = document.querySelector('.sectionContainer');
 
 const API_KEY = '96d6d065213dba04092397c03343aea2';
 
@@ -26,74 +21,51 @@ const getWeatherInfo = function (city) {
         .then((data) => data.json()).then((response) => {
 
             // Destructuring Response Object
-            const { name, visibility, sys: { country }, weather, main: { temp, pressure, humidity }, wind: { speed, deg }, timezone } = response;
+            const { name, visibility, sys: { country }, weather, main: { temp, pressure, humidity }, wind: { speed, deg }, dt, timezone } = response;
 
-            // main alias with weatherMain
+            // main as weatherMain and destructure weather[0] again 
             const { main: weatherMain, description } = weather[0];
+
+            // create object and pass to generateView method
+            const obj = {
+                name: name, visibility: visibility, country: country, weather: weather, temp: temp, pressure: pressure, humidity: humidity, speed: speed, deg: deg, dt: dt, timezone: timezone, weatherMain: weatherMain, description: description
+            }
 
             // display containers when user clicks the button
             sectionDiv.style.display = "block";
 
-            //1. weather info of left container
-
-            // city and country name
-            countryName.innerHTML = `${name}${country ? "," + country : ''}`;
-
-            // overcast
-            overCast.innerHTML = `<h2 class="overcast">${weatherMain}</h2>`;
-
-            // generate weather icon based on the weatherDescription and weatherMain property
-            generateWeatherIcon(description, weatherMain);
-
-            // convert temperature from kelvin to celsius and add DOM to HTML
-            degreeInfo.innerHTML = `${(temp - 273.15).toFixed(2)}°C`;
+            // generateview method generate 2 containers which contains weather information 
+            generateview(obj);
 
             // show clock time
             clearInterval(intervalId);
-            intervalId = setInterval(() => timeZone(timezone), 1000);
+            intervalId = setInterval(() => timeZone(obj.timezone), 1000);
 
-            //2. weather info of right container
-            rightContainer.innerHTML =
-                `<div class="more-info-heading">
-                        <h2>More Info</h2>
-                    </div>
-                <div class="info-div">
-                    <div class="single-info">
-                        <p class="more-info-p">Pressure: ${pressure}</p>
-                        <i class="bi bi-arrows-collapse"></i>
-                    </div>
-                    <div class="single-info">
-                        <p class="more-info-p">Visibility: ${visibility}</p>
-                        <i class="far fa-binoculars"></i>
-                    </div>
-                    <div class="single-info">
-                        <p class="more-info-p">Wind Speed: ${speed}</p>
-                        <i class="far fa-wind"></i>
-                    </div>
-                    <div class="single-info">
-                        <p class="more-info-p">Wind Degree: ${deg}</p>
-                        <i class="far fa-location-arrow"></i>
-                    </div>
-                    <div class="single-info">
-                        <p class="more-info-p">Humidity: ${humidity}</p>
-                        <i class="far fa-tint"></i>
-                    </div>
-                </div>`;
         }).catch((err) => {
             displayErrorMsg("Location is not found! Try Again ☹");
         })
 }
 
 // when form submit display weather data
+
 form.addEventListener('submit', function (e) {
     e.preventDefault();
+    sectionContainer.innerHTML = '';
     getInfoBtn.classList.add('box-btn');
     const cityName = city.value.trim();
 
-    if (cityName != "")
+    if (cityName != "") {
         getWeatherInfo(cityName);
-    else
-        displayErrorMsg("Please Enter City Name.")
+
+        // Clear out input field after fetch is complete
+        city.value = "";
+    }
+    else {
+        // if the input field is empty make "Get Info" Button disable and skip making API call
+        getInfoBtn.classList.remove('box-btn');
+        getInfoBtn.disabled = true;
+    }
+    getInfoBtn.disabled = false;
 })
 
 // when focus out on button remove box-btn class
@@ -101,24 +73,31 @@ getInfoBtn.addEventListener('focusout', function () {
     getInfoBtn.classList.remove('box-btn');
 });
 
-// generate weather icon based on the weatherDescription and weatherMain property
+// generate weather icon based on the weatherDescription and weatherMain property. function returns src
 function generateWeatherIcon(weatherDes, weatherMain) {
     if (weatherMain === 'Rain' || weatherDes === 'light rain' || weatherDes === 'moderate rain' || weatherDes === 'heavy intensity rain' || weatherDes === 'very heavy rain' || weatherDes === 'extreme rain') {
-        weatherImg.src = './assets/animated/rain.svg';
+        return './assets/animated/rain.svg';
+
     } else if (weatherMain === 'Snow' || weatherDes === 'freezing rain') {
-        weatherImg.src = './assets/animated/snow.svg';
+        return './assets/animated/snow.svg';
+
     } else if (weatherMain === 'Drizzle' || weatherDes === 'light intensity shower rain' || weatherDes === 'shower rain' || weatherDes === 'heavy intensity shower rain' || weatherDes === 'ragged shower rain') {
-        weatherImg.src = './assets/animated/shower_rain.svg';
+        return './assets/animated/shower_rain.svg';
+
     } else if (weatherMain === 'Clouds' || weatherDes === 'few clouds') {
-        weatherImg.src = './assets/animated/few_clouds.svg';
+        return './assets/animated/few_clouds.svg';
+
     } else if (weatherDes === 'scattered clouds' || weatherDes === 'broken clouds' || weatherDes === 'overcast clouds') {
-        weatherImg.src = './assets/animated/broken_clouds.svg';
+        return './assets/animated/broken_clouds.svg';
+
     } else if (weatherMain === 'Clear') {
-        weatherImg.src = `./assets/animated/clear_sky.svg`;
+        return `./assets/animated/clear_sky.svg`;
+
     } else if (weatherMain === 'Thunderstorm') {
-        weatherImg.src = `./assets/animated/thunderstorm.svg`;
+        return `./assets/animated/thunderstorm.svg`;
+
     } else if (weatherMain === 'Mist' || weatherMain === 'Smoke' || weatherMain === 'Haze' || weatherMain === 'Dust' || weatherMain === 'Fog' || weatherMain === 'Sand' || weatherMain === 'Ash' || weatherMain === 'Squall' || weatherMain === 'Tornado') {
-        weatherImg.src = `./assets/animated/mist.svg`;
+        return `./assets/animated/mist.svg`;
     }
     else {
         return;
@@ -141,5 +120,76 @@ function displayErrorMsg(msg) {
 function timeZone(timezone) {
     const timezoneInMinutes = timezone / 60;
     const currTime = moment().utcOffset(timezoneInMinutes).format("h:mm:ss A");
-    time.innerHTML = `<h2 class="time">${currTime}</h2>`;
+    const time = document.querySelector('.time');
+    if (time) time.innerHTML = currTime;
+}
+
+// generateview method which returns src
+function generateview(obj) {
+    // generate weather icon method based on the weatherDescription and weatherMain property. 
+    const sectionChild = `<div class="current-weather-div">
+            <div class="name-info">
+              <h2 class="country-name">${obj.name}${obj.country ? "," + obj.country : ''}</h2>
+            </div>
+            <div class="current-weather-info">
+              <div class="current-weather-imginfo">
+              <img alt="current weather image" src=${generateWeatherIcon(obj.description, obj.weatherMain)} />
+                <h2 class="overcast">${obj.weatherMain}</h2>
+              </div>
+              <div class="current-weather-degreeinfo">
+                <h1 class="degree">${(obj.temp - 273.15).toFixed(2)}°C</h1>
+              </div>
+            </div>
+            <div class="time-info">
+              <h2>${getCurrentDate(obj.dt, obj.timezone)}</h2>
+              <h2 class="time"></h2>
+            </div>
+          </div>
+          
+          <div class="more-info-div">
+              <div class="more-info-heading">
+                      <h2>More Info</h2>
+                  </div>
+              <div class="info-div">
+                  <div class="single-info">
+                      <p class="more-info-p">Pressure: ${obj.pressure}</p>
+                      <i class="bi bi-arrows-collapse"></i>
+                  </div>
+                  <div class="single-info">
+                      <p class="more-info-p">Visibility: ${obj.visibility}</p>
+                      <i class="far fa-binoculars"></i>
+                  </div>
+                  <div class="single-info">
+                      <p class="more-info-p">Wind Speed: ${obj.speed}</p>
+                      <i class="far fa-wind"></i>
+                  </div>
+                  <div class="single-info">
+                      <p class="more-info-p">Wind Degree: ${obj.deg}</p>
+                      <i class="far fa-location-arrow"></i>
+                  </div>
+                  <div class="single-info">
+                      <p class="more-info-p">Humidity: ${obj.humidity}</p>
+                      <i class="far fa-tint"></i>
+                  </div>
+              </div>
+          </div>`;
+
+    sectionContainer.insertAdjacentHTML("afterbegin", sectionChild);
+}
+
+// getCurrentDate function to display current date of specific country
+function getCurrentDate(dt, timezone) {
+    const inputDate = new Date(dt * 1000 + (timezone * 1000)).toISOString().slice(0, 10); // 2020-06-14
+
+    const date = new Date(inputDate);
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
+
+    const formatedSplitDate = formattedDate.split(' '); //June 14, 2020
+
+    const newDate = formatedSplitDate[1].replace(",", '');
+    const month = formatedSplitDate[0];
+    const year = formatedSplitDate[2];
+
+    return newDate + " " + month + " " + year; //14 June 2020
 }
