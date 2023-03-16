@@ -14,6 +14,11 @@ const API_KEY = '96d6d065213dba04092397c03343aea2';
 
 let intervalId = 0;
 
+let obj = {};
+
+let isButtonDisable = false;
+let errorCity = false;
+
 // Get Weather Info function
 
 const getWeatherInfo = function (city) {
@@ -27,9 +32,12 @@ const getWeatherInfo = function (city) {
             const { main: weatherMain, description } = weather[0];
 
             // create object and pass to generateView method
-            const obj = {
-                name: name, visibility: visibility, country: country, weather: weather, temp: temp, pressure: pressure, humidity: humidity, speed: speed, deg: deg, dt: dt, timezone: timezone, weatherMain: weatherMain, description: description
+            const currentNowTime = Date.now();
+             obj = {
+                name: name, visibility: visibility, country: country, weather: weather, temp: temp, pressure: pressure, humidity: humidity, speed: speed, deg: deg, dt: dt, timezone: timezone, weatherMain: weatherMain, description: description, time:currentNowTime,
             }
+
+            console.log(obj)
 
             // display containers when user clicks the button
             sectionDiv.style.display = "block";
@@ -42,7 +50,9 @@ const getWeatherInfo = function (city) {
             intervalId = setInterval(() => timeZone(obj.timezone), 1000);
 
         }).catch((err) => {
+            // console.log(err)
             displayErrorMsg("Location is not found! Try Again ☹");
+            errorCity = true;
         })
 }
 
@@ -52,21 +62,67 @@ form.addEventListener('submit', function (e) {
     e.preventDefault();
     sectionContainer.innerHTML = '';
     getInfoBtn.classList.add('box-btn');
-    const cityName = city.value.trim();
+    const cityName = city.value.trim().toLowerCase();
 
-    if (cityName != "") {
-        getWeatherInfo(cityName);
+        if (cityName != "") {
+        console.log("button is enabbled")
+            if(localStorage.getItem(cityName)){
+                console.log("no need to call api display data from the localstorage")
+                const displayLocalObject = JSON.parse(localStorage.getItem(cityName));
 
+                // const dtTimeInMs = displayLocalObject.dt * 1000;
+                // check if local storage object time is greater than 1 or not
+
+                const now = Date.now();
+
+                console.log(` calculate difference between now & dt : ${now-displayLocalObject.time}`);
+
+                if(now - displayLocalObject.time > 3600000){
+                    console.log("Time is gone so remove item from the local storage and make api call again and set it into local storage")
+                    localStorage.removeItem(cityName)
+
+                    // fetch data again and set it in local storage
+                    setTimeout(() => {
+                        console.log("Now API is called")
+                        getWeatherInfo(cityName);
+                        setTimeout(() => {
+                            console.log(obj);
+                            localStorage.setItem(cityName, JSON.stringify(obj));
+                            if(errorCity){
+                                localStorage.removeItem(cityName);
+                            }
+                        },500);
+                    },500); 
+                }else{
+                    console.log("get data from local storage and display data");
+                    generateview(displayLocalObject);
+                }
+            }
+            else{
+                setTimeout(() => {
+                    getWeatherInfo(cityName);
+                    setTimeout(() => {
+                        console.log(obj);
+                        if(!errorCity){
+                            localStorage.setItem(cityName, JSON.stringify(obj));
+                        }
+                    },500);
+                },500); 
+            }
         // Clear out input field after fetch is complete
         city.value = "";
+        }
+        else {
+            // if the input field is empty make "Get Info" Button disable and skip making API call
+            console.log("button is disabled")
+            getInfoBtn.classList.remove('box-btn');
+            getInfoBtn.disabled = true;
+        }
+        getInfoBtn.disabled = false;
     }
-    else {
-        // if the input field is empty make "Get Info" Button disable and skip making API call
-        getInfoBtn.classList.remove('box-btn');
-        getInfoBtn.disabled = true;
-    }
-    getInfoBtn.disabled = false;
-})
+
+    
+)
 
 // when focus out on button remove box-btn class
 getInfoBtn.addEventListener('focusout', function () {
