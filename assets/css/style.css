@@ -243,8 +243,6 @@ disable button style
 ==========
 */
 
-/* .disable {
-} */
 .not-allowed {
   cursor: not-allowed !important;
   background: rgb(159, 165, 170) !important;

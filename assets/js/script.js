@@ -18,8 +18,7 @@ let errorCity = false;
 
 getInfoBtn.disabled = true;
 
-// Get Weather Info function
-
+// Get Weather Info function which fetch api and display data
 const getWeatherInfo = async (city) => {
     try {
         const data = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
@@ -39,7 +38,6 @@ const getWeatherInfo = async (city) => {
 }
 
 // when form submit display weather data
-
 form.addEventListener('submit', async function (e) {
     e.preventDefault();
     sectionContainer.innerHTML = '';
@@ -47,9 +45,7 @@ form.addEventListener('submit', async function (e) {
     const cityName = city.value.trim().toLowerCase();
 
     if (cityName != "") {
-        console.log("button is enabbled")
         if (localStorage.getItem(cityName)) {
-            console.log("no need to call api display data from the localstorage")
             const displayLocalObject = JSON.parse(localStorage.getItem(cityName));
 
             // check local storage item time then display data
@@ -58,8 +54,6 @@ form.addEventListener('submit', async function (e) {
         else {
             await getWeatherInfo(cityName);
             if (!errorCity) {
-                console.log(errorCity, cityName)
-                console.log('2', obj);
                 localStorage.setItem(cityName, JSON.stringify(obj));
             }
             errorCity = false;
@@ -67,26 +61,20 @@ form.addEventListener('submit', async function (e) {
         // Clear out input field after fetch is complete
         city.value = "";
     }
-    // else {
-    //     // if the input field is empty make "Get Info" Button disable and skip making API call
-    //     console.log("button is disabled")
-    //     getInfoBtn.classList.remove('box-btn');
-    //     // getInfoBtn.classList.add('not-allowed');
-    //     getInfoBtn.disabled = true;
-    // }
-    // getInfoBtn.disabled = false;
-    // getInfoBtn.classList.remove('disable');
 });
 
-// apply disable class to getInfo button
-
-if (getInfoBtn.disabled === true) {
-    getInfoBtn.classList.remove('box-btn');
-    getInfoBtn.classList.add('not-allowed');
-}
+getInfoBtn.classList.remove('box-btn');
+getInfoBtn.classList.add('not-allowed');
 
 // when field is empty disable btn otherwise enabled that
 city.addEventListener('keyup', function () {
+
+    // apply disable class to getInfo button
+
+    if (getInfoBtn.disabled === true) {
+        getInfoBtn.classList.remove('box-btn');
+        getInfoBtn.classList.add('not-allowed');
+    }
     if (city.value.length > 0 && city.value.trim() !== '') {
         getInfoBtn.disabled = false;
         // getInfoBtn.classList.add('box-btn');
@@ -237,15 +225,10 @@ const checkTimeAndDisplayData = async (cityName, displayLocalObject) => {
 
     const now = Date.now();
 
-    console.log(`calculate difference between now & local storage item time: ${now - displayLocalObject.time}`);
-
     if (now - displayLocalObject.time > 3600000) {
-        console.log("Time is gone so remove item from the local storage and make api call again and set it into local storage")
         localStorage.removeItem(cityName)
 
         // fetch data again and set it in local storage
-
-        console.log("Now API is called")
         await getWeatherInfo(cityName);
 
         localStorage.setItem(cityName, JSON.stringify(obj));
@@ -254,8 +237,6 @@ const checkTimeAndDisplayData = async (cityName, displayLocalObject) => {
         }
 
     } else {
-        console.log("get data from local storage and display data");
-        console.log(`Local Storage Object : `, displayLocalObject)
         generateview(displayLocalObject);
     }
 
