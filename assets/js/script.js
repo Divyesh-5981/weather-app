@@ -26,24 +26,12 @@ const getWeatherInfo = async (city) => {
         const data = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
         const response = await data.json();
 
-        // Destructuring Response Object
-        const { name, visibility, sys: { country }, weather, main: { temp, pressure, humidity }, wind: { speed, deg }, dt, timezone } = response;
-
-        // main as weatherMain and destructure weather[0] again 
-        const { main: weatherMain, description } = weather[0];
-
-        // create object and pass to generateView method
-        const currentNowTime = Date.now();
-        obj = {
-            name: name, visibility: visibility, country: country, weather: weather, temp: temp, pressure: pressure, humidity: humidity, speed: speed, deg: deg, dt: dt, timezone: timezone, weatherMain: weatherMain, description: description, time: currentNowTime,
-        }
+        // destructure response and build a new object with that response
+        doDestructuring(response);
 
         // generateview method generate 2 containers which contains weather information 
         generateview(obj);
 
-        // show clock time
-        clearInterval(intervalId);
-        intervalId = setInterval(() => timeZone(obj.timezone), 1000);
     } catch (error) {
         displayErrorMsg("Location is not found! Try Again ☹");
         errorCity = true;
@@ -64,40 +52,17 @@ form.addEventListener('submit', async function (e) {
             console.log("no need to call api display data from the localstorage")
             const displayLocalObject = JSON.parse(localStorage.getItem(cityName));
 
-            // check if local storage object time is greater than 1 or not
-
-            const now = Date.now();
-
-            console.log(` calculate difference between now & dt : ${now - displayLocalObject.time}`);
-
-            if (now - displayLocalObject.time > 3600000) {
-                console.log("Time is gone so remove item from the local storage and make api call again and set it into local storage")
-                localStorage.removeItem(cityName)
-
-                // fetch data again and set it in local storage
-
-                console.log("Now API is called")
-                await getWeatherInfo(cityName);
-
-                console.log(obj);
-                localStorage.setItem(cityName, JSON.stringify(obj));
-                if (errorCity) {
-                    localStorage.removeItem(cityName);
-                }
-
-            } else {
-                console.log("get data from local storage and display data");
-                console.log(`Local Storage Object : `, displayLocalObject)
-                generateview(displayLocalObject);
-            }
+            // check local storage item time then display data
+            checkTimeAndDisplayData(cityName, displayLocalObject);
         }
         else {
             await getWeatherInfo(cityName);
-            console.log('1', obj);
             if (!errorCity) {
+                console.log(errorCity, cityName)
                 console.log('2', obj);
                 localStorage.setItem(cityName, JSON.stringify(obj));
             }
+            errorCity = false;
         }
         // Clear out input field after fetch is complete
         city.value = "";
@@ -109,10 +74,7 @@ form.addEventListener('submit', async function (e) {
         getInfoBtn.disabled = true;
     }
     getInfoBtn.disabled = false;
-}
-
-
-)
+});
 
 // when focus out on button remove box-btn class
 getInfoBtn.addEventListener('focusout', function () {
@@ -175,6 +137,10 @@ function generateview(obj) {
 
     // display containers when user clicks the button
     sectionDiv.style.display = "block";
+
+    // show clock time
+    clearInterval(intervalId);
+    intervalId = setInterval(() => timeZone(obj.timezone), 1000);
 
     // generate weather icon method based on the weatherDescription and weatherMain property. 
     const sectionChild = `<div class="current-weather-div">
@@ -242,4 +208,50 @@ function getCurrentDate(dt, timezone) {
     const year = formatedSplitDate[2];
 
     return newDate + " " + month + " " + year; //14 June 2020
+}
+
+// checkTimeAndDisplayData check time of local storage item if it is > 1 hour then remove from local storage and again make api and store in localstorage. It also remove item from local storage for invalid country
+const checkTimeAndDisplayData = async (cityName, displayLocalObject) => {
+
+    const now = Date.now();
+
+    console.log(`calculate difference between now & local storage item time: ${now - displayLocalObject.time}`);
+
+    if (now - displayLocalObject.time > 3600000) {
+        console.log("Time is gone so remove item from the local storage and make api call again and set it into local storage")
+        localStorage.removeItem(cityName)
+
+        // fetch data again and set it in local storage
+
+        console.log("Now API is called")
+        await getWeatherInfo(cityName);
+
+        localStorage.setItem(cityName, JSON.stringify(obj));
+        if (errorCity) {
+            localStorage.removeItem(cityName);
+        }
+
+    } else {
+        console.log("get data from local storage and display data");
+        console.log(`Local Storage Object : `, displayLocalObject)
+        generateview(displayLocalObject);
+    }
+
+}
+
+// Destructure response object and build a new object
+const doDestructuring = (response) => {
+
+    // Destructuring Response Object
+    const { name, visibility, sys: { country }, weather, main: { temp, pressure, humidity }, wind: { speed, deg }, dt, timezone } = response;
+
+    // main as weatherMain and destructure weather[0] again 
+    const { main: weatherMain, description } = weather[0];
+
+    const currentNowTime = Date.now();
+
+    // create object and pass to generateView method
+    obj = {
+        name: name, visibility: visibility, country: country, weather: weather, temp: temp, pressure: pressure, humidity: humidity, speed: speed, deg: deg, dt: dt, timezone: timezone, weatherMain: weatherMain, description: description, time: currentNowTime,
+    };
 }
