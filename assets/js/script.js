@@ -21,107 +21,97 @@ let errorCity = false;
 
 // Get Weather Info function
 
-const getWeatherInfo = function (city) {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
-        .then((data) => data.json()).then((response) => {
+const getWeatherInfo = async (city) => {
+    try {
+        const data = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
+        const response = await data.json();
 
-            // Destructuring Response Object
-            const { name, visibility, sys: { country }, weather, main: { temp, pressure, humidity }, wind: { speed, deg }, dt, timezone } = response;
+        // Destructuring Response Object
+        const { name, visibility, sys: { country }, weather, main: { temp, pressure, humidity }, wind: { speed, deg }, dt, timezone } = response;
 
-            // main as weatherMain and destructure weather[0] again 
-            const { main: weatherMain, description } = weather[0];
+        // main as weatherMain and destructure weather[0] again 
+        const { main: weatherMain, description } = weather[0];
 
-            // create object and pass to generateView method
-            const currentNowTime = Date.now();
-             obj = {
-                name: name, visibility: visibility, country: country, weather: weather, temp: temp, pressure: pressure, humidity: humidity, speed: speed, deg: deg, dt: dt, timezone: timezone, weatherMain: weatherMain, description: description, time:currentNowTime,
-            }
+        // create object and pass to generateView method
+        const currentNowTime = Date.now();
+        obj = {
+            name: name, visibility: visibility, country: country, weather: weather, temp: temp, pressure: pressure, humidity: humidity, speed: speed, deg: deg, dt: dt, timezone: timezone, weatherMain: weatherMain, description: description, time: currentNowTime,
+        }
 
-            console.log(obj)
+        // generateview method generate 2 containers which contains weather information 
+        generateview(obj);
 
-            // display containers when user clicks the button
-            sectionDiv.style.display = "block";
-
-            // generateview method generate 2 containers which contains weather information 
-            generateview(obj);
-
-            // show clock time
-            clearInterval(intervalId);
-            intervalId = setInterval(() => timeZone(obj.timezone), 1000);
-
-        }).catch((err) => {
-            // console.log(err)
-            displayErrorMsg("Location is not found! Try Again ☹");
-            errorCity = true;
-        })
+        // show clock time
+        clearInterval(intervalId);
+        intervalId = setInterval(() => timeZone(obj.timezone), 1000);
+    } catch (error) {
+        displayErrorMsg("Location is not found! Try Again ☹");
+        errorCity = true;
+    }
 }
 
 // when form submit display weather data
 
-form.addEventListener('submit', function (e) {
+form.addEventListener('submit', async function (e) {
     e.preventDefault();
     sectionContainer.innerHTML = '';
     getInfoBtn.classList.add('box-btn');
     const cityName = city.value.trim().toLowerCase();
 
-        if (cityName != "") {
+    if (cityName != "") {
         console.log("button is enabbled")
-            if(localStorage.getItem(cityName)){
-                console.log("no need to call api display data from the localstorage")
-                const displayLocalObject = JSON.parse(localStorage.getItem(cityName));
+        if (localStorage.getItem(cityName)) {
+            console.log("no need to call api display data from the localstorage")
+            const displayLocalObject = JSON.parse(localStorage.getItem(cityName));
 
-                // const dtTimeInMs = displayLocalObject.dt * 1000;
-                // check if local storage object time is greater than 1 or not
+            // check if local storage object time is greater than 1 or not
 
-                const now = Date.now();
+            const now = Date.now();
 
-                console.log(` calculate difference between now & dt : ${now-displayLocalObject.time}`);
+            console.log(` calculate difference between now & dt : ${now - displayLocalObject.time}`);
 
-                if(now - displayLocalObject.time > 3600000){
-                    console.log("Time is gone so remove item from the local storage and make api call again and set it into local storage")
-                    localStorage.removeItem(cityName)
+            if (now - displayLocalObject.time > 3600000) {
+                console.log("Time is gone so remove item from the local storage and make api call again and set it into local storage")
+                localStorage.removeItem(cityName)
 
-                    // fetch data again and set it in local storage
-                    setTimeout(() => {
-                        console.log("Now API is called")
-                        getWeatherInfo(cityName);
-                        setTimeout(() => {
-                            console.log(obj);
-                            localStorage.setItem(cityName, JSON.stringify(obj));
-                            if(errorCity){
-                                localStorage.removeItem(cityName);
-                            }
-                        },500);
-                    },500); 
-                }else{
-                    console.log("get data from local storage and display data");
-                    generateview(displayLocalObject);
+                // fetch data again and set it in local storage
+
+                console.log("Now API is called")
+                await getWeatherInfo(cityName);
+
+                console.log(obj);
+                localStorage.setItem(cityName, JSON.stringify(obj));
+                if (errorCity) {
+                    localStorage.removeItem(cityName);
                 }
+
+            } else {
+                console.log("get data from local storage and display data");
+                console.log(`Local Storage Object : `, displayLocalObject)
+                generateview(displayLocalObject);
             }
-            else{
-                setTimeout(() => {
-                    getWeatherInfo(cityName);
-                    setTimeout(() => {
-                        console.log(obj);
-                        if(!errorCity){
-                            localStorage.setItem(cityName, JSON.stringify(obj));
-                        }
-                    },500);
-                },500); 
-            }
-        // Clear out input field after fetch is complete
-        city.value = "";
         }
         else {
-            // if the input field is empty make "Get Info" Button disable and skip making API call
-            console.log("button is disabled")
-            getInfoBtn.classList.remove('box-btn');
-            getInfoBtn.disabled = true;
+            await getWeatherInfo(cityName);
+            console.log('1', obj);
+            if (!errorCity) {
+                console.log('2', obj);
+                localStorage.setItem(cityName, JSON.stringify(obj));
+            }
         }
-        getInfoBtn.disabled = false;
+        // Clear out input field after fetch is complete
+        city.value = "";
     }
+    else {
+        // if the input field is empty make "Get Info" Button disable and skip making API call
+        console.log("button is disabled")
+        getInfoBtn.classList.remove('box-btn');
+        getInfoBtn.disabled = true;
+    }
+    getInfoBtn.disabled = false;
+}
 
-    
+
 )
 
 // when focus out on button remove box-btn class
@@ -182,6 +172,10 @@ function timeZone(timezone) {
 
 // generateview method which returns src
 function generateview(obj) {
+
+    // display containers when user clicks the button
+    sectionDiv.style.display = "block";
+
     // generate weather icon method based on the weatherDescription and weatherMain property. 
     const sectionChild = `<div class="current-weather-div">
             <div class="name-info">
