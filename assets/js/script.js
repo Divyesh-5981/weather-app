@@ -13,11 +13,10 @@ const sectionContainer = document.querySelector('.sectionContainer');
 const API_KEY = '96d6d065213dba04092397c03343aea2';
 
 let intervalId = 0;
-
 let obj = {};
-
-let isButtonDisable = false;
 let errorCity = false;
+
+getInfoBtn.disabled = true;
 
 // Get Weather Info function
 
@@ -35,6 +34,7 @@ const getWeatherInfo = async (city) => {
     } catch (error) {
         displayErrorMsg("Location is not found! Try Again ☹");
         errorCity = true;
+        getInfoBtn.disabled = false;
     }
 }
 
@@ -67,13 +67,35 @@ form.addEventListener('submit', async function (e) {
         // Clear out input field after fetch is complete
         city.value = "";
     }
-    else {
-        // if the input field is empty make "Get Info" Button disable and skip making API call
-        console.log("button is disabled")
-        getInfoBtn.classList.remove('box-btn');
+    // else {
+    //     // if the input field is empty make "Get Info" Button disable and skip making API call
+    //     console.log("button is disabled")
+    //     getInfoBtn.classList.remove('box-btn');
+    //     // getInfoBtn.classList.add('not-allowed');
+    //     getInfoBtn.disabled = true;
+    // }
+    // getInfoBtn.disabled = false;
+    // getInfoBtn.classList.remove('disable');
+});
+
+// apply disable class to getInfo button
+
+if (getInfoBtn.disabled === true) {
+    getInfoBtn.classList.remove('box-btn');
+    getInfoBtn.classList.add('not-allowed');
+}
+
+// when field is empty disable btn otherwise enabled that
+city.addEventListener('keyup', function () {
+    if (city.value.length > 0 && city.value.trim() !== '') {
+        getInfoBtn.disabled = false;
+        // getInfoBtn.classList.add('box-btn');
+        getInfoBtn.classList.remove('not-allowed');
+    } else {
         getInfoBtn.disabled = true;
+        getInfoBtn.classList.remove('box-btn');
+        getInfoBtn.classList.add('not-allowed');
     }
-    getInfoBtn.disabled = false;
 });
 
 // when focus out on button remove box-btn class

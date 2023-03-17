@@ -244,11 +244,11 @@ disable button style
 */
 
 /* .disable {
-  background: rgb(159, 165, 170) !important;
-}*/
-/* .not-allowed {
-  cursor: not-allowed !important;
 } */
+.not-allowed {
+  cursor: not-allowed !important;
+  background: rgb(159, 165, 170) !important;
+}
 
 /* 
 ==========
