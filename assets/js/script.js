@@ -13,7 +13,7 @@ const sectionContainer = document.querySelector('.sectionContainer');
 const API_KEY = '96d6d065213dba04092397c03343aea2';
 
 let intervalId = 0;
-let obj = {};
+// let obj = {};
 let errorCity = false;
 
 getInfoBtn.disabled = true;
@@ -21,11 +21,13 @@ getInfoBtn.disabled = true;
 // Get Weather Info function which fetch api and display data
 const getWeatherInfo = async (city) => {
     try {
+        getInfoBtn.disabled = true;
+
         const data = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
         const response = await data.json();
 
         // destructure response and build a new object with that response
-        doDestructuring(response);
+        const obj = doDestructuring(response);
 
         // generateview method generate 2 containers which contains weather information 
         generateview(obj);
@@ -125,13 +127,15 @@ function generateWeatherIcon(weatherDes, weatherMain) {
 // displayErrorMsg when something is wrong
 function displayErrorMsg(msg) {
     sectionDiv.style.display = "none";
-    const errorMsg = document.createElement('h2');
-    errorMsg.innerHTML = msg;
-    errorMsg.classList.add('error-msg');
-    weatherInputContainer.append(errorMsg);
-    setTimeout(() => {
-        errorMsg.style.display = "none";
-    }, 3000);
+    mobiscroll.setOptions({
+    theme: 'ios',
+    themeVariant: 'light'
+    });
+    mobiscroll.toast({
+        message: msg,
+        display: 'bottom',
+        color:'danger',
+    });
 }
 
 // realtime clock
@@ -179,7 +183,7 @@ function generateview(obj) {
               <div class="info-div">
                   <div class="single-info">
                       <p class="more-info-p">Pressure: ${obj.pressure}</p>
-                      <i class="bi bi-arrows-collapse"></i>
+                      <svg style="font-size:20px" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8Zm7-8a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 4.293V.5A.5.5 0 0 1 8 0Zm-.5 11.707l-1.146 1.147a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 11.707V15.5a.5.5 0 0 1-1 0v-3.793Z"/></svg>
                   </div>
                   <div class="single-info">
                       <p class="more-info-p">Visibility: ${obj.visibility}</p>
@@ -254,7 +258,7 @@ const doDestructuring = (response) => {
     const currentNowTime = Date.now();
 
     // create object and pass to generateView method
-    obj = {
+    return obj = {
         name: name, visibility: visibility, country: country, weather: weather, temp: temp, pressure: pressure, humidity: humidity, speed: speed, deg: deg, dt: dt, timezone: timezone, weatherMain: weatherMain, description: description, time: currentNowTime,
     };
 }
