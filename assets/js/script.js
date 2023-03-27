@@ -30,7 +30,7 @@ const getWeatherInfo = async (city) => {
         const obj = doDestructuring(response);
 
         // generateview method generate 2 containers which contains weather information 
-        generateview(obj);
+        generateView(obj);
 
     } catch (error) {
         displayErrorMsg("Location is not found! Try Again ☹");
@@ -147,7 +147,7 @@ function timeZone(timezone) {
 }
 
 // generateview method which returns src
-function generateview(obj) {
+function generateView(obj) {
 
     // display containers when user clicks the button
     sectionDiv.style.display = "block";
@@ -241,7 +241,7 @@ const checkTimeAndDisplayData = async (cityName, displayLocalObject) => {
         }
 
     } else {
-        generateview(displayLocalObject);
+        generateView(displayLocalObject);
     }
 
 }
